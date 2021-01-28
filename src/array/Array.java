@@ -109,7 +109,11 @@ public class Array<E> {
         size --;
         //小优化，将不需要的空间设置为null值，便于垃圾回收
         data[size] = null;
-        if(size == data.length / 2){
+
+        //优化，在数组元素减至原数组1/4时才进行缩容，避免addLast和removeLast反复执行，复杂度持续为O(n),
+        //并且只缩减为数据原长度的1/2,避免缩容之后添加元素再进行扩容
+        //增加判断缩容后长度不能为0
+        if(size == data.length / 4 && data.length / 2 != 0){
             resize(data.length / 2);
         }
         return ret;
