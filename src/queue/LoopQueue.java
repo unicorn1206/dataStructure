@@ -36,23 +36,70 @@ public class LoopQueue<E> implements Queue<E> {
         //队列是否已满
         if((tail + 1) % data.length == front){
             resize(getCapacity() * 2);
-        }else{
-            data[tail] = e;
-            tail = (tail + 1) % size;
         }
+        data[tail] = e;
+        tail = (tail + 1) % data.length;
+        size++;
     }
 
     private void resize(int newCapacity) {
         E[] newData = (E[])new Object[newCapacity + 1];
+        for(int i = 0;i < size;i++){
+            newData[i] = data[(i + front) % data.length];
+        }
+        data = newData;
+        front = 0;
+        tail = size;
     }
 
     @Override
     public E dequeue() {
-        return null;
+        if(isEmpty()){
+            throw new IllegalArgumentException("queue is empty.");
+        }
+        E result = data[front];
+        data[front] = null;
+        front = (front + 1) % data.length;
+        size--;
+        if(size == getCapacity() / 4 && getCapacity() / 2 != 0){
+            resize(getCapacity() / 2);
+        }
+        return result;
     }
 
     @Override
     public E getFront() {
-        return null;
+        if(isEmpty()){
+            throw new IllegalArgumentException("queue is empty.");
+        }
+        return data[front];
+    }
+
+    @Override
+    public String toString(){
+        StringBuffer sb = new StringBuffer();
+        sb.append(String.format("size=%d,capacity=%d\n",size,getCapacity()));
+        sb.append("LoopQueue:front [");
+        for (int i = front; i != tail; i = (i + 1) % data.length) {
+            sb.append(data[i]);
+            if(i != (tail - 1) % data.length){
+                sb.append(", ");
+            }
+        }
+        sb.append("] tail");
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        LoopQueue<Integer> queue = new LoopQueue<>();
+        for (int i = 0;i < 10;i++){
+            queue.enqueue(i);
+            System.out.println(queue.toString());
+
+            if(i % 3 == 2){
+                queue.dequeue();
+                System.out.println(queue.toString());
+            }
+        }
     }
 }
