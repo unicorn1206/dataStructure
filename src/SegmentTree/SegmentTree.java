@@ -84,6 +84,47 @@ public class SegmentTree<E> {
         return merge.merge(leftRes,rightRes);
     }
 
+    /**
+     * 将index位置的值更新为e
+     * @param index
+     * @param e
+     */
+    public void set(int index,E e){
+        if(index < 0 || index >= data.length){
+            throw new IllegalArgumentException("index is illegal.");
+        }
+        data[index] = e;
+        set(0,0,data.length - 1,index,e);
+    }
+
+    /**
+     * 在以treeIndex为根的线段树中，更新index的值为e
+     * @param treeIndex
+     * @param l
+     * @param r
+     * @param index
+     * @param e
+     */
+    private void set(int treeIndex,int l,int r,int index,E e){
+        if (l == r){
+            tree[index] = e;
+            return;
+        }
+        int mid = l + (r - l) / 2;
+        int leftChild = leftChild(treeIndex);
+        int rightChild = rightChild(treeIndex);
+
+        if(index <= mid){
+            set(leftChild,0,mid,index,e);
+        }else{
+            set(rightChild,mid + 1,r,index,e);
+        }
+
+        tree[treeIndex] = merge.merge(tree[leftChild],tree[rightChild]);
+
+    }
+
+
     public int getSize(){
         return data.length;
     }
