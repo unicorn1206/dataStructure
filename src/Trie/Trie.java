@@ -2,7 +2,7 @@ package Trie;
 
 import sun.reflect.generics.tree.Tree;
 
-import java.util.TreeMap;
+import java.util.*;
 
 public class Trie {
     /**
@@ -89,5 +89,19 @@ public class Trie {
             cur = cur.next.get(c);
         }
         return true;
+    }
+
+    public static void main(String[] args) {
+        Map<String,String> map = new HashMap<String,String>();
+        map.put("a","1");
+        map.put("b","2");
+        System.out.println(map.get("c"));
+        String a = null;
+        if(("1").equals(a)){
+            System.out.println("a=1");
+        }
+        if(a.equals("0")){
+            System.out.println("a=0");
+        }
     }
 }

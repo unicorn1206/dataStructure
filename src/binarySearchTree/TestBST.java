@@ -6,7 +6,7 @@ import java.util.Random;
 public class TestBST {
     public static void main(String[] args) {
         BST<Integer> integerBST = new BST<>();
-        Random random = new Random();
+        /*Random random = new Random();
         for(int i = 0;i < 1000;i++){
             integerBST.add(random.nextInt(10000),i);
         }
@@ -35,11 +35,11 @@ public class TestBST {
                 throw new IllegalArgumentException("Error");
             }
         }
-        System.out.println("removeMax test completed");
-//        int[] nums = {5,3,6,8,4,2};
-//        for (int i = 0;i < nums.length;i++) {
-//            integerBST.add(nums[i],i);
-//        }
+        System.out.println("removeMax test completed");*/
+        int[] nums = {5,3,6,8,4,2};
+        for (int i = 0;i < nums.length;i++) {
+            integerBST.add(nums[i],i);
+        }
 //        integerBST.levelOrder();
 //        System.out.println();
 //        integerBST.traversePreOrder();
@@ -48,8 +48,8 @@ public class TestBST {
 //        integerBST.preOrderNR();
 //        System.out.println();
 
-//        integerBST.inOrder();
-//        System.out.println();
+        integerBST.inOrder();
+        System.out.println();
 
 //        integerBST.postOrder();
 //        System.out.println();
