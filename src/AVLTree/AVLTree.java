@@ -347,6 +347,8 @@ public class AVLTree<K extends Comparable<K>,V> {
             node.left = add(node.left,key,value);
         }else if(key.compareTo(node.key) > 0){
             node.right = add(node.right,key,value);
+        }else{
+            node.value = value;
         }
 
         //更新height
@@ -357,7 +359,62 @@ public class AVLTree<K extends Comparable<K>,V> {
         if(Math.abs(balanceFactor) > 1){
             System.out.println("unbalanced:" + balanceFactor);
         }
+
+        //平衡维护
+         if(balanceFactor > 1 && getBalanceFactor(node.left) >= 0){
+             return rightRotate(node);
+         }
+
+        if(balanceFactor < -1 && getBalanceFactor(node.right) <= 0){
+            return leftRotate(node);
+        }
         return node;
+    }
+
+    //对节点y进行向右旋转操作，返回旋转后新的根节点y
+    //           y                           x
+    //          / \                         / \
+    //         x   T4                      z   y
+    //        /\         ------------>    / \  / \
+    //       z  T3         向右旋转（y）   T1 T2 T3 T4
+    //      / \
+    //     T1  T2
+    private Node rightRotate(Node y){
+        Node x = y.left;
+        Node T3 = x.right;
+
+        //向右旋转
+        x.right = y;
+        y.left = T3;
+
+        //更新height
+        y.height = Math.max(getHeight(y.left),getHeight(y.right)) + 1;
+        x.height = Math.max(getHeight(x.left),getHeight(x.right)) + 1;
+
+        return x;
+    }
+
+    //对节点y进行向左旋转操作，返回旋转后新的根节点x
+    //           y                           x
+    //          / \                         / \
+    //         T1   x                      y   Z
+    //             /\     ------------>   / \  / \
+    //            T2 Z      向左旋转（y）  T1 T2 T3 T4
+    //              / \
+    //             T3  T4
+    private Node leftRotate(Node y){
+        Node x = y.right;
+        Node T2 = x.left;
+
+        //向左旋转
+        x.left = y;
+        y.right = T2;
+
+        //更新height
+        y.height = Math.max(getHeight(y.left),getHeight(y.right)) + 1;
+        x.height = Math.max(getHeight(x.left),getHeight(x.right)) + 1;
+
+        return x;
     }
 
 //    方法一：1/2
