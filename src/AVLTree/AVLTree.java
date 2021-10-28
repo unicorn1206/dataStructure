@@ -199,38 +199,77 @@ public class AVLTree<K extends Comparable<K>,V> {
     private Node remove(Node node,K key){
         if(node == null){
             return null;
-        }else if(key.compareTo(node.key) < 0){
+        }
+        Node retNode;
+        if(key.compareTo(node.key) < 0){
             node.left = remove(node.left,key);
-            return node;
+            retNode = node;
         }else if(key.compareTo(node.key) > 0){
             node.right = remove(node.right,key);
-            return node;
+            retNode = node;
         }else{ //e = node.e
             //待删除节点左子树为空
             if(node.left == null){
                 Node rightNode = node.right;
                 node.right = null;
                 size--;
-                return rightNode;
+                retNode = rightNode;
             }
             //待删除节点右子树为空
-            if(node.right == null){
+            else if(node.right == null){
                 Node leftNode = node.left;
                 node.left = null;
                 size--;
-                return leftNode;
+                retNode = leftNode;
+            }else {
+
+                //待删除节点左右子树均不为空
+                //找到比待删除节点大的最小的节点，即待删除节点右子树中最小的节点
+                //用这个节点顶替待删除节点的位置
+                Node successor = minimun(node.right);
+                successor.left = node.left;
+                successor.right = remove(node.right, successor.key);
+
+                node.left = node.right = null;
+                retNode = successor;
             }
-
-            //待删除节点左右子树均不为空
-            //找到比待删除节点大的最小的节点，即待删除节点右子树中最小的节点
-            //用这个节点顶替待删除节点的位置
-            Node successor = minimun(node.right);
-            successor.left = node.left;
-            successor.right = removeMin(node.right);
-
-            node.left = node.right = null;
-            return successor;
         }
+
+        if(retNode == null){
+            return null;
+        }
+        //更新height
+        retNode.height = 1 + Math.max(getHeight(retNode.left),getHeight(retNode.right));
+
+        //计算平衡因子
+        int balanceFactor = getBalanceFactor(retNode);
+        if(Math.abs(balanceFactor) > 1){
+            System.out.println("unbalanced:" + balanceFactor);
+        }
+
+        //平衡维护
+        //LL
+        if(balanceFactor > 1 && getBalanceFactor(retNode.left) >= 0){
+            return rightRotate(retNode);
+        }
+
+        //RR
+        if(balanceFactor < -1 && getBalanceFactor(retNode.right) <= 0){
+            return leftRotate(retNode);
+        }
+
+        //LR
+        if(balanceFactor > 1 && getBalanceFactor(retNode.left) < 0){
+            node.left = leftRotate(retNode.left);
+            return rightRotate(retNode);
+        }
+
+        //RL
+        if(balanceFactor < -1 && getBalanceFactor(retNode.right) > 0){
+            node.right = rightRotate(retNode.right);
+            return leftRotate(retNode);
+        }
+        return node;
     }
 
     //删除二分搜索树最大值
