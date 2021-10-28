@@ -371,7 +371,7 @@ public class AVLTree<K extends Comparable<K>,V> {
 
     //方法二：1/2
     //向二分搜索树中添加元素
-    public void add(K key,int i,V value){
+    public void add(K key,V value){
         root = add(root,key,value);
     }
 
